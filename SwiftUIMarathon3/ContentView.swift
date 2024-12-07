@@ -8,14 +8,43 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var offset: CGFloat = 0
+    @State private var scale: CGFloat = 1
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        Button {
+            withAnimation(
+                Animation.spring(duration: 0.4, bounce: 0.3)
+            ) {
+                scale = 0
+                offset = 31
+            } completion: {
+                scale = 1
+                offset = 0
+            }
+        } label: {
+            buttonLabel()
         }
-        .padding()
+    }
+    
+    private func buttonLabel() -> some View {
+        HStack(spacing: -1) {
+            ZStack {
+                playImage()
+                    .scaleEffect(1 - scale, anchor: .leading)
+                playImage()
+                    .offset(x: offset)
+            }
+            playImage()
+                .scaleEffect(scale, anchor: .trailing)
+        }
+    }
+    
+    private func playImage() -> some View {
+        Image(systemName: "play.fill")
+            .resizable()
+            .scaledToFit()
+            .frame(width: 32)
     }
 }
 
